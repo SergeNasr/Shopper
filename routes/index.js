@@ -41,7 +41,14 @@ router.post('/api/v1/application', (req, res, next) => {
     const results = [];
 
     // Grab data from http request
-    const data = {text: req.body.text, complete: false};
+    const data = {
+        first: req.body.first,
+        last: req.body.last,
+        email: req.body.email,
+        phone: req.body.phone,
+    };
+
+    console.log(req.body);
 
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, (err, client, done) => {
@@ -54,11 +61,11 @@ router.post('/api/v1/application', (req, res, next) => {
         }
 
         // SQL Query > Insert Data
-        client.query('INSERT INTO application(text, complete) values($1, $2)',
-            [data.text, data.complete]);
+        client.query('INSERT INTO carrot_application(first, last, email, phone) values($1, $2, $3, $4)',
+            [data.first, data.last, data.email, data.phone]);
 
         // SQL Query > Select Data
-        const query = client.query('SELECT * FROM application ORDER BY id ASC');
+        const query = client.query('SELECT * FROM carrot_application ORDER BY id ASC');
 
         // Stream results back one row at a time
         query.on('row', (row) => {

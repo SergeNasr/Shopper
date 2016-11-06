@@ -1,8 +1,37 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
+}
+
+.img-circle {
+    border-radius: 50%;
+    background-color: #5E569E;
+}
+
+.form-col {
+    margin-top: 50px;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.left-col-form {
+    padding-top: 130px;
+    background-color: #6F63CA;
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+    height: 390px;
+}
+
+.right-col-form {
+    padding-top: 30px;
+    background-color: #DADBD4;
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 390px;
 }
