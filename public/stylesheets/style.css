@@ -35,3 +35,12 @@ a {
     padding-right: 30px;
     height: 390px;
 }
+
+#continue-form {
+    margin: auto;
+    width: 70%;
+}
+
+#continue-form .nav-pills>li.active>a {
+    background-color: #6F63CA;
+}

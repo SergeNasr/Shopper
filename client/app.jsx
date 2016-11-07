@@ -34,12 +34,18 @@ var Main = React.createClass({
     }
 });
 
+var AppContinueWrapper = React.createClass({
+    render: function() {
+        return <AppContinue applicationId={this.props.params["id"]} />;
+    }
+});
+
 var CarrotApp = React.createClass({
     render: function() {
         return (
             <Router history={hashHistory}>
                 <Route path='/' component={Main} />
-                <Route path='/continue' component={AppContinue} />
+                <Route path='/application/:id' component={AppContinueWrapper} />
             </Router>
         );
     }

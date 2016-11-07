@@ -13,5 +13,5 @@ const query = client.query(
     'legal_age BOOLEAN default FALSE,' +
     'able_to_lift BOOLEAN default FALSE,' +
     'work_permit BOOLEAN default FALSE,' +
-    'complete BOOLEAN default FALSE)');
+    'owns_car BOOLEAN default FALSE)');
 query.on('end', function () { client.end(); });

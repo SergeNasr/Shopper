@@ -55,6 +55,14 @@ var Main = React.createClass({
     }
 });
 
+var AppContinueWrapper = React.createClass({
+    displayName: 'AppContinueWrapper',
+
+    render: function render() {
+        return React.createElement(AppContinue, { applicationId: this.props.params["id"] });
+    }
+});
+
 var CarrotApp = React.createClass({
     displayName: 'CarrotApp',
 
@@ -63,7 +71,7 @@ var CarrotApp = React.createClass({
             Router,
             { history: hashHistory },
             React.createElement(Route, { path: '/', component: Main }),
-            React.createElement(Route, { path: '/continue', component: AppContinue })
+            React.createElement(Route, { path: '/application/:id', component: AppContinueWrapper })
         );
     }
 });
@@ -74,6 +82,206 @@ ReactDOM.render(React.createElement(CarrotApp, null), document.getElementById('a
 'use strict';
 
 var React = require('react');
+var Navbar = require('react-bootstrap').Navbar;
+var Nav = require('react-bootstrap').Nav;
+var NavItem = require('react-bootstrap').NavItem;
+var Tabs = require('react-bootstrap').Tabs;
+var Tab = require('react-bootstrap').Tab;
+var Row = require('react-bootstrap').Row;
+var Col = require('react-bootstrap').Col;
+var FormGroup = require('react-bootstrap').FormGroup;
+var Checkbox = require('react-bootstrap').Checkbox;
+var Button = require('react-bootstrap').Button;
+var Radio = require('react-bootstrap').Radio;
+var ControlLabel = require('react-bootstrap').ControlLabel;
+var $ = require('jquery');
+
+var ApplicationDialog = React.createClass({
+    displayName: 'ApplicationDialog',
+
+    getInitialState: function getInitialState() {
+        return {
+            key: "first",
+            legalAge: false,
+            youLift: false,
+            workPermit: false,
+            carOwner: false,
+            currentTab: ''
+        };
+    },
+
+    nextState: function nextState() {
+        var current = this.state.key;
+
+        switch (current) {
+            case "first":
+                this.setState({ key: "second" });
+                return;
+
+            case "second":
+                this.setState({ key: "third" });
+                return;
+
+            default:
+                return;
+
+        }
+    },
+
+    handleOnSelect: function handleOnSelect() {
+        this.setState({ currentTab: this.state.key });
+    },
+
+    updateApplication: function updateApplication() {
+        var self = this;
+        var url = '/api/v1/application/' + self.props.applicationId;
+        $.ajax({
+            url: url,
+            type: 'PUT',
+            data: {
+                legalAge: self.state.legalAge,
+                youLift: self.state.youLift,
+                workPermit: self.state.workPermit,
+                carOwner: self.state.carOwner
+            },
+            success: function success() {
+                self.nextState();
+            }
+        });
+    },
+
+    handleAgeBox: function handleAgeBox() {
+        this.setState({ legalAge: !this.state.legalAge });
+    },
+
+    handleLiftBox: function handleLiftBox() {
+        this.setState({ youLift: !this.state.youLift });
+    },
+
+    handlePermitBox: function handlePermitBox() {
+        this.setState({ workPermit: !this.state.workPermit });
+    },
+
+    isCarOwner: function isCarOwner() {
+        this.setState({ carOwner: true });
+    },
+
+    isNotCarOwner: function isNotCarOwner() {
+        this.setState({ carOwner: false });
+    },
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            { id: 'continue-form' },
+            React.createElement(
+                Tab.Container,
+                { id: 'left-tabs-example', defaultActiveKey: 'first', activeKey: this.state.key, onSelect: this.handleOnSelect },
+                React.createElement(
+                    Row,
+                    { className: 'clearfix' },
+                    React.createElement(
+                        Col,
+                        { sm: 4 },
+                        React.createElement(
+                            Nav,
+                            { bsStyle: 'pills', stacked: true },
+                            React.createElement(
+                                NavItem,
+                                { eventKey: 'first', disabled: this.state.key != "first" },
+                                'Eligibility'
+                            ),
+                            React.createElement(
+                                NavItem,
+                                { eventKey: 'second', disabled: this.state.key != "second" },
+                                'Other Criteria'
+                            ),
+                            React.createElement(
+                                NavItem,
+                                { eventKey: 'third', disabled: this.state.key != "third" },
+                                'Follow Up!'
+                            )
+                        )
+                    ),
+                    React.createElement(
+                        Col,
+                        { sm: 8 },
+                        React.createElement(
+                            Tab.Content,
+                            { animation: true },
+                            React.createElement(
+                                Tab.Pane,
+                                { eventKey: 'first' },
+                                React.createElement(
+                                    FormGroup,
+                                    null,
+                                    React.createElement(
+                                        Checkbox,
+                                        { onChange: this.handleAgeBox },
+                                        'You are 18 or over'
+                                    ),
+                                    ' ',
+                                    React.createElement(
+                                        Checkbox,
+                                        { onChange: this.handleLiftBox },
+                                        'You are able to bench press 225 lbs without a spotter'
+                                    ),
+                                    ' ',
+                                    React.createElement(
+                                        Checkbox,
+                                        { onChange: this.handlePermitBox },
+                                        'You are eligible to work in the United States'
+                                    )
+                                ),
+                                React.createElement(
+                                    Button,
+                                    { onClick: this.nextState },
+                                    'Next'
+                                )
+                            ),
+                            React.createElement(
+                                Tab.Pane,
+                                { eventKey: 'second' },
+                                React.createElement(
+                                    FormGroup,
+                                    null,
+                                    React.createElement(
+                                        ControlLabel,
+                                        null,
+                                        'Do you own a car?'
+                                    ),
+                                    ' ',
+                                    React.createElement(
+                                        Radio,
+                                        { name: 'gender', inline: true, onClick: this.isCarOwner },
+                                        'Yes'
+                                    ),
+                                    ' ',
+                                    React.createElement(
+                                        Radio,
+                                        { name: 'gender', inline: true },
+                                        'No'
+                                    ),
+                                    ' '
+                                ),
+                                React.createElement(
+                                    Button,
+                                    { onClick: this.updateApplication },
+                                    'Next'
+                                )
+                            ),
+                            React.createElement(
+                                Tab.Pane,
+                                { eventKey: 'third' },
+                                'Thank you for taking the time to apply to Carrot! One of our representatives will contact you regarding the next steps of your application!'
+                            )
+                        )
+                    )
+                )
+            )
+        );
+    }
+});
 
 var AppContinue = React.createClass({
     displayName: 'AppContinue',
@@ -82,14 +290,40 @@ var AppContinue = React.createClass({
         return React.createElement(
             'div',
             null,
-            'Continue App'
+            React.createElement(
+                Navbar,
+                null,
+                React.createElement(
+                    Navbar.Header,
+                    null,
+                    React.createElement(
+                        Navbar.Brand,
+                        null,
+                        React.createElement(
+                            'a',
+                            { href: '#' },
+                            'Carrot'
+                        )
+                    )
+                ),
+                React.createElement(
+                    Nav,
+                    { pullRight: true },
+                    React.createElement(
+                        NavItem,
+                        { eventKey: 1, href: '/' },
+                        'Sign out'
+                    )
+                )
+            ),
+            React.createElement(ApplicationDialog, { applicationId: this.props.applicationId })
         );
     }
 });
 
 module.exports = AppContinue;
 
-},{"react":475}],3:[function(require,module,exports){
+},{"jquery":178,"react":475,"react-bootstrap":269}],3:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -199,7 +433,6 @@ var RightColumnForm = React.createClass({
 
     allRequiredValuesAreNotEmpty: function allRequiredValuesAreNotEmpty() {
         var currentState = this.state;
-        console.log(currentState);
         if (currentState.first == null || currentState.first.length == 0 || currentState.last == null || currentState.last.length == 0 || currentState.phone == null || currentState.phone.length == 0 || currentState.email == null || currentState.email.length == 0) {
             return false;
         }
@@ -226,8 +459,9 @@ var RightColumnForm = React.createClass({
                 email: self.state.email,
                 phone: self.state.phone
             },
-            success: function success() {
-                hashHistory.push('/continue');
+            success: function success(data) {
+                var path = "/application/" + data;
+                hashHistory.push(path);
             }
         });
     },

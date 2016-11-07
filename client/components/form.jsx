@@ -9,7 +9,7 @@ var FormControl = require('react-bootstrap').FormControl;
 var ControlLabel = require('react-bootstrap').ControlLabel;
 var Button = require('react-bootstrap').Button;
 var $ = require('jquery');
-var hashHistory = require('react-router').hashHistory
+var hashHistory = require('react-router').hashHistory;
 
 var LeftColumnForm = React.createClass({
     render: function() {
@@ -130,8 +130,9 @@ var RightColumnForm = React.createClass({
                 email: self.state.email,
                 phone: self.state.phone
             },
-            success: function() {
-                hashHistory.push('/continue');
+            success: function(data) {
+                var path = "/application/" + data;
+                hashHistory.push(path);
             }
         });
     },
