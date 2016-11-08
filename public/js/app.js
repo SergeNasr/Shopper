@@ -142,7 +142,8 @@ var ApplicationDialog = React.createClass({
                 legalAge: self.state.legalAge,
                 youLift: self.state.youLift,
                 workPermit: self.state.workPermit,
-                carOwner: self.state.carOwner
+                carOwner: self.state.carOwner,
+                workflowState: "2"
             },
             success: function success() {
                 self.nextState();
@@ -267,7 +268,7 @@ var ApplicationDialog = React.createClass({
                                 React.createElement(
                                     Button,
                                     { onClick: this.updateApplication },
-                                    'Next'
+                                    'Submit Application!'
                                 )
                             ),
                             React.createElement(
@@ -334,6 +335,7 @@ var FormGroup = require('react-bootstrap').FormGroup;
 var FormControl = require('react-bootstrap').FormControl;
 var ControlLabel = require('react-bootstrap').ControlLabel;
 var Button = require('react-bootstrap').Button;
+var Checkbox = require('react-bootstrap').Checkbox;
 var $ = require('jquery');
 var hashHistory = require('react-router').hashHistory;
 
@@ -362,7 +364,8 @@ var RightColumnForm = React.createClass({
             first: '',
             last: '',
             email: '',
-            phone: ''
+            phone: '',
+            backgroundCheckOk: false
         };
     },
 
@@ -445,6 +448,11 @@ var RightColumnForm = React.createClass({
 
         var self = this;
 
+        if (!self.state.backgroundCheckOk) {
+            alert("We can't process your application without a background check. Please check the box in order to continue!");
+            return;
+        }
+
         if (!self.allRequiredValuesAreNotEmpty() || self.checkEmail(self.state.email) !== 'success' || self.checkPhone(self.state.phone) !== 'success') {
             alert("Please make sure all the values are correctly filled");
             return;
@@ -464,6 +472,10 @@ var RightColumnForm = React.createClass({
                 hashHistory.push(path);
             }
         });
+    },
+
+    handleBackgroundCheckBox: function handleBackgroundCheckBox() {
+        this.setState({ backgroundCheckOk: !this.state.backgroundCheckOk });
     },
 
     render: function render() {
@@ -541,6 +553,11 @@ var RightColumnForm = React.createClass({
                         placeholder: 'Enter phone number',
                         onChange: this.handlePhoneChange }),
                     React.createElement(FormControl.Feedback, null)
+                ),
+                React.createElement(
+                    Checkbox,
+                    { onChange: this.handleBackgroundCheckBox },
+                    'It\'s OK for Carrot to run a background check on me.'
                 ),
                 React.createElement(
                     Button,

@@ -8,6 +8,7 @@ var FormGroup = require('react-bootstrap').FormGroup;
 var FormControl = require('react-bootstrap').FormControl;
 var ControlLabel = require('react-bootstrap').ControlLabel;
 var Button = require('react-bootstrap').Button;
+var Checkbox = require('react-bootstrap').Checkbox;
 var $ = require('jquery');
 var hashHistory = require('react-router').hashHistory;
 
@@ -28,7 +29,8 @@ var RightColumnForm = React.createClass({
             first: '',
             last: '',
             email: '',
-            phone: ''
+            phone: '',
+            backgroundCheckOk: false
         };
     },
 
@@ -114,6 +116,11 @@ var RightColumnForm = React.createClass({
 
         var self = this;
 
+        if (!self.state.backgroundCheckOk) {
+            alert("We can't process your application without a background check. Please check the box in order to continue!");
+            return;
+        }
+
         if (!self.allRequiredValuesAreNotEmpty() ||
                 self.checkEmail(self.state.email) !== 'success' ||
                 self.checkPhone(self.state.phone) !== 'success') {
@@ -135,6 +142,10 @@ var RightColumnForm = React.createClass({
                 hashHistory.push(path);
             }
         });
+    },
+
+    handleBackgroundCheckBox: function() {
+        this.setState({backgroundCheckOk: !this.state.backgroundCheckOk});
     },
 
     render: function() {
@@ -189,6 +200,10 @@ var RightColumnForm = React.createClass({
                             onChange={this.handlePhoneChange} />
                         <FormControl.Feedback />
                     </FormGroup>
+
+                    <Checkbox onChange={this.handleBackgroundCheckBox}>
+                        It's OK for Carrot to run a background check on me.
+                    </Checkbox>
 
                     <Button type="submit">
                         Continue

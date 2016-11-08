@@ -58,7 +58,8 @@ var ApplicationDialog = React.createClass({
                 legalAge: self.state.legalAge,
                 youLift: self.state.youLift,
                 workPermit: self.state.workPermit,
-                carOwner: self.state.carOwner
+                carOwner: self.state.carOwner,
+                workflowState: "2"
             },
             success: function() {
                 self.nextState();
@@ -135,7 +136,7 @@ var ApplicationDialog = React.createClass({
                                         </Radio>
                                         {' '}
                                     </FormGroup>
-                                    <Button onClick={this.updateApplication}>Next</Button>
+                                    <Button onClick={this.updateApplication}>Submit Application!</Button>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="third">
                                     Thank you for taking the time to apply to Carrot!

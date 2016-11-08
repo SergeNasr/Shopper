@@ -13,5 +13,7 @@ const query = client.query(
     'legal_age BOOLEAN default FALSE,' +
     'able_to_lift BOOLEAN default FALSE,' +
     'work_permit BOOLEAN default FALSE,' +
-    'owns_car BOOLEAN default FALSE)');
+    'owns_car BOOLEAN default FALSE,' +
+    'created_at TIMESTAMP default now(),' +
+    'workflow_state VARCHAR(10) default \'1\')');
 query.on('end', function () { client.end(); });
